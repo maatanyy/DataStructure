@@ -1,6 +1,7 @@
 #include <stdio.h>
 int main()
 {
+    printf("\n"); 
 int i;             //int 형 i 선언
 int *ptr;          //포인터 ptr 선언
 int **dptr;       //더블 포인터 dptr 선언
