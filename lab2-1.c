@@ -9,7 +9,7 @@ printf("practice git\n");
 
 printf("[----- [Noh Min Sung] [2018038076] -----]\n");
 printf("Size of char: %ld byte\n",sizeof(charType));         //char형 변수 charType 크기는 1바이트
-printf("Size of int: %ld bytes\n",sizeof(integerType));      //int형 변수 integerType 크기는 4바이트
+printf("Size of int: %ld bytes\n",sizeolabf(integerType));      //int형 변수 integerType 크기는 4바이트
 printf("Size of float: %ld bytes\n",sizeof(floatType));      //float형 변수 floatType 크기는 4바이트
 printf("Size of double: %ld bytes\n",sizeof(doubleType));    //double형 변수 doubleType 크기는 8바이트
 printf("-----------------------------------------\n");
