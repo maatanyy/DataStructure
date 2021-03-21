@@ -2,6 +2,7 @@
 #include<stdlib.h>    //malloc함수 쓰기위해 
 
 void main() {
+    printf("[----- [노민성/noh min sung] [2018038076] -----]");
     int list[5];     //크기가 5인 list배열 선언
     int* plist[5];   //크기가 5인 포인터형 배열 plist선언
 
