@@ -7,7 +7,7 @@ struct student {
 };
 
 int main(void) {
-
+printf("[----- [노민성/noh min sung] [2018038076] -----]");
 	struct student pst;
 
 	printf("size of student= %ld\n", sizeof(struct student));  //24가 출력됨 원래라면 13+4+2=19가 
