@@ -2,6 +2,7 @@
 #include <stdlib.h>
 void main()
 {
+       printf("[----- [노민성/noh min sung] [2018038076] -----]");
        int list[5];   //list 배열 선언
        int *plist[5]={NULL,};    //포인터형 배열 plist 선언후 초기화
 
