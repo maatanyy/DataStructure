@@ -7,6 +7,7 @@ int i;  //int형 변수 i 선언
 
 void main(void)
 {
+	printf("[----- [노민성/noh min sung] [2018038076] -----]");
 	for (i = 0; i < MAX_SIZE; i++)   //i=0;i<MAX_SIZE;i++반복문 시행 
 		input[i] = i;       //input[i]에 i를 넣어줌
 	answer = sum(input, MAX_SIZE);     //answer는 sum함수에 input과 MAX_SIZE를 인자로 넣어줘서 구함
