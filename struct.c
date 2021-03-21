@@ -12,6 +12,7 @@ typedef struct {      //typedef struct student2 선언, 사용할때 struct안�
 }student2;
 
 int main() {
+	printf("[----- [노민성/noh min sung] [2018038076] -----]");
 	struct student1 st1 = { 'A',100,'A' };        //struct student1형 st1선언후 초기화
 	printf("st1.lastName = %c\n",st1.lastName);     //A출력됨
 	printf("st1.studentId = %d\n", st1.studentId);    //100출력됨
