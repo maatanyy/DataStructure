@@ -3,6 +3,7 @@
 void print1(int* ptr, int rows);  //print1함수 선언
 
 int main() {
+    printf("[----- [노민성/noh min sung] [2018038076] -----]");
     int one[] = { 0,1,2,3,4 };   //배열one 선언후 0,1,2,3,4로 값 초기화
 
     printf("one      = %p\n", one);     //배열의이름은 주소니까 배열의 주소나옴
