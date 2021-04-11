@@ -209,8 +209,36 @@ int deleteFirst(headNode* h) {
  */
 int deleteNode(headNode* h, int key) {
 
-	return 0;
+	listNode* trail;
+	listNode* current;
 
+	listNode* p = h->first;
+
+	if (p) {     // p가 null이 아니면 
+		trail = p;
+		current = p->link;    //
+
+		if (trail->key == key) {
+			h->first = trail->link;
+			free(trail);
+			p = p->link;
+			return 0;
+		}
+
+		else if ((trail->key != key) && (current->key != key)) {
+				trail = current;
+				current = current->link;
+			}
+
+			trail->link = current->link;
+			free(current);
+
+		}
+	else{
+		printf("There is no way to delete.\n");
+	}
+
+	return 0;
 }
 
 /**
@@ -218,20 +246,37 @@ int deleteNode(headNode* h, int key) {
  */
 int deleteLast(headNode* h) {
 
-	/*
-	listNode* p = h->first;
-	listNode* node = (listNode*)malloc(sizeof(listNode));
+	listNode* trail;
+	listNode* current;
 
-	while (p->link!= NULL) {
+	listNode* p = h->first;
+
+	if (p) {
+
+		if (p->link == NULL) {
+			h->first = p->link;
+			free(p);
 			p = p->link;
 		}
 
-	p = p->link;
-	p->link = NULL;
-	*/
+		else {
+			trail = p;
+			current = p ->link;
+
+			while (current->link!= NULL) {
+				trail = current;
+				current = current->link;
+			}
+			free(current);
+			trail->link = NULL;
+		}
+	}
+
+	else {
+		printf("There is nothing to delete.\n");
+	}
 	return 0;
 }
-
 
 /**
  * 리스트의 링크를 역순으로 재 배치
