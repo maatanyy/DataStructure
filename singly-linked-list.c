@@ -226,14 +226,19 @@ int deleteNode(headNode* h, int key) {
 		}
 
 		else if ((trail->key != key) && (current->key != key)) {
-				trail = current;
-				current = current->link;
-			}
+			trail = current;
+			current = current->link;
+		}
 
+		else if ((trail->key != key) && (current->key == key)) {
 			trail->link = current->link;
 			free(current);
-
+			return 0;
 		}
+
+		printf("There is no such number.\n");
+	}
+
 	else{
 		printf("There is no way to delete.\n");
 	}
