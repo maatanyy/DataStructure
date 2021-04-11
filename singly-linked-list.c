@@ -188,6 +188,17 @@ int insertLast(headNode* h, int key) {
  */
 int deleteFirst(headNode* h) {
 
+	listNode* p = h->first;
+
+	if (p) {
+		h->first = p->link;
+		free(p);
+		p = p->link;
+		
+	}
+	else {
+		printf("There is nothing to delete\n");
+	}
 	
 	return 0;
 }
