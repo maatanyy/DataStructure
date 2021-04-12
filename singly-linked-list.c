@@ -160,11 +160,24 @@ int insertNode(headNode* h, int key) {
 	node->key = key;
 	node->link = NULL;
 
-	if (p) {
+
+	if (h->first == NULL) {
+		node->link = h->first;
+		h->first = node;
+	}
+
+	if (h->first->key > node->key) {
+		node->key = key;
+		node->link = h->first;
+		h->first = node;
+	}
+
+
+	else if (p) {
 
 		while (p->link != NULL) {
 
-			if (node->key > p->key) {
+			if ((node->key > p->key) && (p->link->key < node->key)) {
 				p = p->link;
 			}
 
@@ -174,22 +187,28 @@ int insertNode(headNode* h, int key) {
 				break;
 			}
 
-			else if (node->key < p->key) {
-				node->link = p;
-				h->first = node;
+			else if ((node->key > p->key) && (p->link->key == node->key)) {
+				node->link = p->link;
+				p->link = node;
 				break;
 			}
 
+			else if ((node->key < p->link->key) && (p->link->link == NULL)) {
+				node->link = p->link;
+				p->link = node;
+			}
 		}
+
+	if (p->key > node->key) {
+		node->link = h->first;
+		h->first = node;
+	}
+
+	else {
 		p->link = node;
 	}
-
-	else {     //만약 p가 비어있다면 (즉 빈 리스트라면)
-		node->link = h->first; 
-		h->first = node;   
-	}
+}
 	return 0;
-
 }
 
 /**
