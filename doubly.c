@@ -54,6 +54,8 @@ int main()
 	int key;
 	headNode* headnode=NULL;
 
+	printf("*************[노민성][2018038076]********");
+
 	do{
 		printf("----------------------------------------------------------------\n");
 		printf("                     Doubly Linked  List                        \n");
@@ -177,10 +179,10 @@ void printList(headNode* h) {
  */
 int insertLast(headNode* h, int key) {
 
-	listNode* p = h->first;               //p로 headNode포인터 대신해서 쓰겠다 선언
+	listNode* p = h->first;               //p로 headNode포인터 대신 해서 쓸거라 선언
 	listNode* node = (listNode*)malloc(sizeof(listNode));           //새로운 노드 동적 할당
 
-	node->key = key;                         //노드의 키에 키값 넣어줌
+	node->key = key;                 //노드의 키에 키값 넣어줌
 	node->llink = NULL;             //노드의 llink비워줌
 	node->rlink = NULL;             //노드의 rlink비워줌
 
@@ -204,8 +206,37 @@ int insertLast(headNode* h, int key) {
 /**
  * list의 마지막 노드 삭제
  */
-int deleteLast(headNode* h) {
+int deleteLast(headNode* h) {   //list 마지막 노드를 삭제하는 함수
 
+	listNode* p=h->first;   //p는 h->first를 가르킴
+
+	listNode* trail;   //listNode포인터 trail 선언
+	listNode* current;	//listNode포인터 current 선언
+
+	if(p){	    //만약 p가 비어있지 않다면, 즉 리스트에 값이 있다면
+
+		if(p->rlink==NULL){   //만약 p->rlink가 비어있다면 즉 p가 마지막이면
+		h->first = p->rlink;     //마지막을 가르키고(NULL)
+		free(p);            //p를 초기화시킴
+		}
+
+		else{   //만약 2개이상의 인덱스가 리스트에 남아있다면
+			trail=p;    //trail이 p를 가르키고
+			current = p->rlink;   //current는 p->rlink가 됨, 즉 한칸 이동
+  
+			while(current->rlink!=NULL){  //만약 current의 rlink가 눌이 아니라면 즉 마지막이 아니라면
+				trail=current;   //trail이 current가 됨
+				current=current->rlink;   //current는 current의 rlink가됨.한칸 이동
+			}
+								//반복문 빠져나왔을때 마지막에 current가 있고 trail을 그 한칸전에 있음
+				free(current);   //current를 메모리 해제해줌 (마지막)
+				trail->rlink=NULL;  //trail의 오른쪽 링크를 null로 바꿔줌
+		} 
+	}
+
+	else{  										// 만약 p가 비어있다면 , 즉 delete할게 없다면
+		printf("There is nothing to delete");  	// 지울게 없다고 출력해줌
+	}
 
 	return 0;
 }
@@ -230,7 +261,20 @@ int insertFirst(headNode* h, int key) {   //앞에 노드를 추가하는 함수
 /**
  * list의 첫번째 노드 삭제
  */
-int deleteFirst(headNode* h) {
+int deleteFirst(headNode* h) {     //처음을 지우는 함수
+
+	listNode* p = h->first;     //listNode포인터 p를 헤드포인터 대신해서 씀
+
+	if(p){      //만약 p가 비어있지 않다면
+		h->first = p->rlink;     //h->first가 가르키는 곳을 p의 오른쪽 링크로 이동
+		free(p);  //p는 해제해준다
+		p=p->rlink;    //p->rlink가 p가 된다
+
+	}
+	 
+	else{          //만약 p가 비어있다면
+		printf("There is nothing to delete\n");   //지울게 없다고 출력해준다
+	}
 
 	return 0;
 }
