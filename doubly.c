@@ -54,7 +54,7 @@ int main()
 	int key;
 	headNode* headnode=NULL;
 
-	printf("*************[노민성][2018038076]********");
+	printf("*************[노민성][2018038076]********\n");
 
 	do{
 		printf("----------------------------------------------------------------\n");
@@ -294,11 +294,77 @@ int invertList(headNode* h) {
 
 /* 리스트를 검색하여, 입력받은 key보다 큰값이 나오는 노드 바로 앞에 삽입 */
 int insertNode(headNode* h, int key) {
+	
+	listNode* p = h->first;							// listNode포인터 p를 헤드포인터 대신해서 씀
+	listNode* node = (listNode*)malloc(sizeof(listNode));           //새로운 노드 동적 할당
 
-	return 0;
+	node->key = key;       //node->key에 key를 넣어준다
+	node->llink = NULL;     //node->link는 NULL로 초기화
+	node->rlink = NULL;     //node->rink는 NULL로 초기화
+
+	if (p) {   //만약 리스트가 비어있지 않다면
+
+		while (p->rlink != NULL) {  //p->rlink!=NULL이면 계속 반복
+			
+			if ((node->key > p->key) && (node->key < p->rlink->key)) {  // 만약 p->key < 새노드 < p->rlink->key의 구조라면
+				node->llink = p;          //node의 llink가 p를 가르키게하고
+				node->rlink = p->rlink;    //node의 rlink가 p의 rlink가 가르키는걸 가르키게하고
+				p->rlink->llink = node;     //p->rlink->llink가ㅏ node를 가르키게하고
+				p->rlink = node;      //p->rlink는 node를 가르킨다
+				break;   //반복문 탈출
+			}
+
+			else if ((node->key == p->key)) {    //만약 node->key == p->key라면
+				node->llink = p;             //p다음에 node연결해줬음
+				node->rlink = p->rlink;       //node->rlink가 p->rlink가 가르키는걸 가리킴
+				p->rlink->llink = node;      //p->rlink!=NULL일때 반복문이 돌아가니 p->rlink->llink가 문제없이 돌아감
+				p->rlink = node;        //p->rlink에 node 이어줌
+				break;    //반복문 탈출
+			}
+		
+			else if ((node->key < p->key)) {
+				node->rlink = p;     //newnode->rlink가 h->first와 같은 걸 가리키게한다
+				p->llink = node;			// p->llink가 node를 가르킴
+				h->first = node;           //newnode를 h->first가 가르키게 한다.
+
+				break;    //반복문 탈출
+			}
+			p = p->rlink;   //위 조건에 해당안될시 , 즉 기존노드 < 기존노드 < 새노드의 경우 p를 옆으로 이동
+
+		}
+
+		//위 반복문을 나왔을 경우인데 두가지의 경우가 있다 첫번째 케이스는 리스트의 원소가 하나일 경우고 두번째는 리스트의 원소가 여러개인데 새노드의 값이 제일 큰 경우이다
+
+		if (p->key < node->key) {   //만약 새노드의 값이 제일 크면 맨 뒤에 이어준다 이건 두가지 경우 똑같이 작용한다.
+			p->rlink = node;     //p->rlink에 node를 이어줌
+			node->llink = p;     //node->llink는 p를 가르킨다
+			return 0;       //리턴
+		}
+
+		else if ((p->key > node->key)&&(p->llink!=NULL)) {     //리스트의 원소가 하나인경우 새 노드값이 p->key보다 작은경우
+			node->llink = p->llink;    //node의 llink가 p의 llink가 가르키는걸 가르키게하고
+			node->rlink = p;   //node의 rlink가 p를 가르키게한다
+			return 0;   //리턴
+		}
+
+		else if ((p->key > node->key) && (p->llink == NULL)) {  //리스트의 원소가 여러개인 경우 새 노드값이 p->key보다 작은경우
+		node->rlink = h->first;     //newnode->rlink가 h->first와 같은 걸 가리키게한다
+		h->first = node;           //newnode를 h->first가 가르키게 한다.
+		return 0;        //리턴
+		}
+
+		else if (p->key == node->key) {  //만약 p key와 node key가 같은 경우
+			p->rlink = node;           //p->rlink가 노드를 가르키게 한다
+			node->llink = p;            //node->llink는 p를 가르키게 한다
+			return 0;      //리턴
+		}
+	}
+
+	else {    //만약 p가 비어져있는경우라면
+		insertFirst(h, key);  //insertFirst함수 호출한다
+	}
+			return 0;	
 }
-
-
 /**
  * list에서 key에 대한 노드 삭제
  */
