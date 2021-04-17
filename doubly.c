@@ -191,6 +191,7 @@ int insertLast(headNode* h, int key) {
 			p = p->rlink;
 		}
 		p->rlink = node;   //마지막 p의 링크에 노드를 이어줌
+		node->llink = p; //새노드의 llink에 p->rlink 이어줌
 	}
 
 	else {        //p가 비어있다면 즉 리스트에 값이 없는 경우
@@ -235,7 +236,7 @@ int deleteLast(headNode* h) {   //list 마지막 노드를 삭제하는 함수
 	}
 
 	else{  										// 만약 p가 비어있다면 , 즉 delete할게 없다면
-		printf("There is nothing to delete");  	// 지울게 없다고 출력해줌
+		printf("There is nothing to delete\n");  	// 지울게 없다고 출력해줌
 	}
 
 	return 0;
@@ -302,8 +303,68 @@ int insertNode(headNode* h, int key) {
  * list에서 key에 대한 노드 삭제
  */
 int deleteNode(headNode* h, int key) {
+	
+	listNode* p = h->first;     //listNode포인터 p를 헤드포인터 대신해서 씀
+
+	listNode* trail;   //listNode포인터 trail 선언
+	listNode* current;	//listNode포인터 current 선언
+
+	if (p) {	    //만약 p가 비어있지 않다면, 즉 리스트에 값이 있다면
+
+		if (p->rlink == NULL) {   //만약 p->rlink가 비어있다면 즉 p가 마지막이면
+			if (p->key != key) {    //만약 p->key가 입력받은 key랑 다르면
+				printf("There is no that key in list.\n");   //그런 키가 없다고 출력해줌
+			}
+
+			else {    //만약 p->key가 입력받은 key랑 같으면
+				h->first = p->rlink;     //마지막을 가르키고(NULL)
+				free(p);            //p를 초기화시킴
+			}
+		}
+
+		else {   //만약 2개이상의 인덱스가 리스트에 남아있다면
+
+			while (p->rlink!=NULL) {
+				
+				trail = p;    //trail이 p를 가르키고
+				current = p->rlink;   //current는 p->rlink가 됨, 즉 한칸 이동
+
+				if (trail->key == key) {   //만약 trail의 key랑 key랑 같다면
+					h->first = trail->rlink;       //h->first가 trail의 rlink를 가르키게하고
+					free(trail);         //trail의 메모리를 해제해준다
+					p = p->rlink;       //p가 그다음으로 이동하고
+					return 0;         //종료시킨다
+				}
+
+				else if (current->key == key) {    //만약 current의 키가 키이면,즉 trail 다음 리스트의 키값이 키이면
+
+					if (current->rlink != NULL) {   //만약 current->rlink가 null이 아닌 경우 즉 list원소의 수가 3개 이상인경우,이렇게 나눈 이유는 아래에서 쓰는 current->rlink->llink때문에 2개일때는 오류가뜸
+						trail->rlink = current->rlink;   //current->rlink를 trail의 rlink가 가르키게 해주고
+						current->rlink->llink = current->llink;   //current의 rlink의 llink 즉 다음노드의 왼쪽링크가 current의 llink 즉 trail을 가르키게 해준다
+						free(current);  //current를 해제해준다
+						return 0;
+					}
+
+					else {   //만약 current->rlink가 null인 경우 즉 리스트의 원소의 수가 2개인 경우
+						trail->rlink = current->rlink;   //trail->rlink가 current->rlink를 가르키도록 (여기선 null이됨)
+						free(current);  //current 메모리 해제해준다
+						return 0;
+					}
+				}
+
+				else if ((trail->key != key) && (current->key != key)) {       //만약 trail key도 key가 아니고 current key도 key가 아니면
+					p = p->rlink;   //p를 한칸 이동한다
+				}
+			}
+				printf("There is no that key in list.\n");   //그런 키가 없다고 출력해줌
+		}
+
+	}
+
+	else {          //만약 p가 비어있다면
+		printf("There is no element in list, first please add any node.\n");   //지울게 없다고 출력해준다
+	}
 
 	return 1;
 }
-
 
