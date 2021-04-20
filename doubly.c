@@ -13,15 +13,15 @@
 #include<stdlib.h>
 /* 필요한 헤더파일 추가 if necessary */
 
-typedef struct Node {
-	int key;
-	struct Node* llink;
-	struct Node* rlink;
+typedef struct Node {     //구조체 Node를 listNode라고 부를꺼다 
+	int key;             //key를 가지고 있음
+	struct Node* llink;   //Node포인터 llink를 가지고 있다.
+	struct Node* rlink;   //Node포인터 rlink를 가지고 있다.
 } listNode;
 
 
 
-typedef struct Head {
+typedef struct Head {  //구조체 Head를 headNode라고 부를거고 노드형 포인터 first를 가지고 있다. 
 	struct Node* first;
 }headNode;
 
@@ -54,7 +54,7 @@ int main()
 	int key;
 	headNode* headnode=NULL;
 
-	printf("*************[노민성][2018038076]********\n");
+	printf("*************[Noh Min Sung]---[2018038076]********\n");
 
 	do{
 		printf("----------------------------------------------------------------\n");
@@ -287,7 +287,30 @@ int deleteFirst(headNode* h) {     //처음을 지우는 함수
  */
 int invertList(headNode* h) {
 
+	listNode* p = h->first;     //p로 headNode포인터 대신해서 쓰겠다 선언
+	listNode* middle;          //listNode포인터 middle 선언
+	listNode* trail;         //listNode포인터 trail 선언
+
+	middle = NULL;   //middle을 널로 초기화
+
+	while (p->rlink != NULL) {  // p링크가 널이아니면 즉 마지막이 아니면 반복문 진행
+		trail = middle;     // trail이 middle을 가리키게 함 (첫 반복엔 둘다 null)
+		middle = p;         // middle이 p를 가리키게 함
+		p = p->rlink;     // p가 rlink에 있는 값,즉 그 다음을 가르키게함
+		middle->rlink = trail;      // A,B,C의 구조에서 B가 지금 middle인데 middle의 rlink가 c를 가르키게함 <- <- 형태로 만들려고하는 과정 
+		middle->llink = p;   //middle의 llink는 p를 가르키게함 즉 <- ->모두 이어주었음 
+		h->first = middle;     //첫 노드를 middle에 이음
+	}
+	                    //p->rlink! =NULL이면 나오니 마지막에 한번 더해줘야함
+	trail = middle;     // trail이 middle을 가리키게 함 
+	middle = p;			 // middle이 p를 가리키게 함
+	p = p->rlink;			// p가 rlink에 있는 값,즉 그 다음을 가르키게함
+	middle->rlink = trail;   //middle의 rlink는 trail을 가르키고 (이 것 invert 한 후 rlink로 넘기며 출력하면 바뀐 값이 나온다.)
+	middle->llink = p;      //middle의 llink는 p를 가르키게 한다   즉   middle은 양 옆으로 링크가 생기고 이걸 한칸씩 옮기면 결국 모두 양 방향으로 링크가 생긴다
+	h->first = middle;    
+
 	return 0;
+
 }
 
 
