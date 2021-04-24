@@ -187,7 +187,7 @@ void printList(listNode* h) {
 /**
  * list에 key에 대한 노드하나를 추가
  */
-int insertLast(listNode* h, int key) {
+int insertLast(listNode* h, int key) {  //마지막에 노드를 추가하는 함수
 
 	listNode* newnode = (listNode*)malloc(sizeof(listNode));   //새로운 노드를 동적 할당해줌
 	newnode->key = key;  //새로운 노드의 키에 키를 대입해준다
@@ -214,10 +214,22 @@ int insertLast(listNode* h, int key) {
 /**
  * list의 마지막 노드 삭제
  */
-int deleteLast(listNode* h) {
+int deleteLast(listNode* h) {  //마지막 노드를 삭제하는 함수
 
+	listNode* p = NULL;      //listNode 포인터 p를 선언하고 NULL로 초기화
 
-	return 1;
+	if (h->rlink == h) {     //만약 headnode의 rlink가 headnode 즉 리스트에 노드가 없으면
+		printf("There is only HeadNode, Nothing to delete.\n");   //지울게 없다고 출력해줌
+		return 1;        //리턴
+	}
+
+	else {     //만약 headnode의 rlink가 headnode가 아니면 즉, 리스트에 노드가 있으면
+		p = h->llink;      //h->llink가 가르키는걸 p가 가르킴
+		h->llink->llink->rlink = h;   //h->llink->llink->rlink는 h를 가르킴
+		h->llink = h->llink->llink;    //h->llink는 h->llink->llink가 가르키는 걸 가르킴
+		free(p);   //p를 해제해준다 (h->llink)
+		return 1;  //리턴
+	}
 }
 
 
@@ -250,11 +262,22 @@ int insertFirst(listNode* h, int key) {
 /**
  * list의 첫번째 노드 삭제
  */
-int deleteFirst(listNode* h) {
+int deleteFirst(listNode* h) {   //첫 노드를 삭제하는 함수
 
+	listNode* p = NULL;      //listNode 포인터 p를 선언하고 NULL로 초기화
 
-	return 1;
+	if (h->rlink == h) {     //만약 headnode의 rlink가 headnode 즉 리스트에 노드가 없으면
+		printf("There is only HeadNode, Nothing to delete.\n");   //지울게 없다고 출력해줌
+		return 1;        //리턴
+	}
 
+	else {     //만약 headnode의 rlink가 headnode가 아니면 즉, 리스트에 노드가 있으면
+		p = h->rlink;      //h->rlink가 가르키는걸 p가 가르킴
+		h->rlink->rlink->llink = h;   //h->rlink->rlink->llink는 h를 가르킴
+		h->rlink = h->rlink->rlink;    //h->rlink는 h->rlink->rlink가 가르키는 걸 가르킴
+		free(p);   //p를 해제해준다 (h->rlink)
+		return 1;  //리턴
+	}
 }
 
 
