@@ -286,7 +286,27 @@ int deleteFirst(listNode* h) {   //첫 노드를 삭제하는 함수
  */
 int invertList(listNode* h) {
 
+	listNode* p = h->rlink;  
+	listNode* middle;    
+	listNode* trail;   
 
+	middle = NULL;
+	while (p->rlink != h) {  
+		trail = middle;     
+		middle = p;         
+		p = p->rlink;     
+		middle->rlink = middle->llink;     
+		middle->llink = p;   
+		h->rlink = middle;
+	}
+
+	trail = middle;    
+	middle = p;			 
+	p = p->rlink;
+	middle->rlink = middle->llink;    
+	middle->llink = p;      
+    h->rlink= middle;
+	
 	return 0;
 }
 
@@ -342,7 +362,7 @@ int insertNode(listNode* h, int key) {
 			return 0;       //리턴
 		}
 
-		else if ((p->key > node->key) && (p->rlink != h)) {     //리스트의 원소가 여러개인 경우 새 노드값이 p->key보다 작은경우
+		else if ((p->key < node->key) && (p->rlink != h)) {     //리스트의 원소가 여러개인 경우 새 노드값이 p->key보다 큰 경우
 			node->rlink = h->rlink;   //node->rlink는 h->rlink를 가르킨다
 			node->llink = p->llink;  //node->llink는 p->llink를 가르킨다
 			h->rlink = node;   //h->rlink는 node를 가르킨다
@@ -350,7 +370,7 @@ int insertNode(listNode* h, int key) {
 			return 0;   //리턴
 		}
 
-		else if ((p->key > node->key) && (p->rlink == h)) {  //리스트의 원소가 하나인 경우 새 노드값이 p->key보다 작은경우
+		else if ((p->key < node->key) && (p->rlink == h)) {  //리스트의 원소가 하나인 경우 새 노드값이 p->key보다 큰 경우
 			node->llink = p->llink;    //node->llink는 p->llink를 가르킨다
 			node->rlink = p;    //node->rlink는 p를 가르킨다
 			p->llink->rlink = node;   //p->llink->rlink는 node를 가르킨다
