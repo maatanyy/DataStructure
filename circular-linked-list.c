@@ -189,7 +189,25 @@ void printList(listNode* h) {
  */
 int insertLast(listNode* h, int key) {
 
-	return 1;
+	listNode* newnode = (listNode*)malloc(sizeof(listNode));   //새로운 노드를 동적 할당해줌
+	newnode->key = key;  //새로운 노드의 키에 키를 대입해준다
+
+
+	if (h->rlink == h) {     // 만약 h->rlink가 h인 경우 즉 headnode만 존재하는 경우는 새로운 노드의 경우만 신경쓰면된다
+		h->rlink = newnode;        //h->rlink가 newnode를 가르키게한다
+		h->llink = newnode;		    //h->ㅣlink가 newnode를 가르키게한다
+		newnode->rlink = h;         //newnode->rlink가 h를 가르키게한다
+		newnode->llink = h;         //newnode->llink가 h를 가르키게한다
+		return 1;                  //리턴
+	}
+
+	else {       //headnode외에 다른 노드도 존재하는 경우는 기존노드와의 관계도 신경써야 한다
+		newnode->llink = h->llink;      //newnode의 llink가 headnode의 llink가 가르키는 걸 가르키게 한다
+		h->llink->rlink = newnode;        //headnode의 llink의 rlink가 newnode를 가르키게 한다
+		newnode->rlink = h;             //newnode의 rlink가 headnode를 가르키게 한다
+		h->llink = newnode;            //h의 llink가 newnode를 가르키게 한다
+		return 1;                     //리턴
+	}
 }
 
 
@@ -208,8 +226,25 @@ int deleteLast(listNode* h) {
  */
 int insertFirst(listNode* h, int key) {
 
+	listNode* newnode = (listNode*)malloc(sizeof(listNode));   //새로운 노드를 동적 할당해줌
+	newnode->key = key;  //새로운 노드의 키에 키를 대입해준다
+	
 
-	return 1;
+	if (h->rlink == h) {     // 만약 h->rlink가 h인 경우 즉 headnode만 존재하는 경우는 새로운 노드의 경우만 신경쓰면된다
+		h->rlink = newnode;        //h->rlink가 newnode를 가르키게한다
+		h->llink = newnode;		    //h->ㅣlink가 newnode를 가르키게한다
+		newnode->rlink = h;         //newnode->rlink가 h를 가르키게한다
+		newnode->llink = h;         //newnode->llink가 h를 가르키게한다
+		return 1;                  //리턴
+	}
+
+	else {       //headnode외에 다른 노드도 존재하는 경우는 기존노드와의 관계도 신경써야 한다
+		newnode->rlink = h->rlink;      //새로운 노드의 rlink가 headnode의 rlink가 가르키던 걸 가르키게 한다
+		h->rlink->llink = newnode;      //새로운 노드의 llink는 headnode를 가르키게 한다
+		newnode->llink = h;             //headnode의 llink는 새로운 노드를 가르킨다
+		h->rlink = newnode;             //headnode의 rlink는 새로운 노드를 가르킨다
+		return 1;                       //리턴
+	}
 }
 
 /**
