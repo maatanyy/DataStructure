@@ -379,8 +379,71 @@ int insertNode(listNode* h, int key) {
  * list에서 key에 대한 노드 삭제
  */
 int deleteNode(listNode* h, int key) {
+	listNode* p = h->rlink;     //listNode포인터 p를 헤드포인터 대신해서 씀
 
-	return 0;
+	listNode* trail;   //listNode포인터 trail 선언
+	listNode* current;	//listNode포인터 current 선언
+
+	if (h->rlink != h) {	   //리스트에 노드가 있다면
+
+		if (p->rlink == h) {   //만약 p->rlink==h즉 노드가 한개라면
+			if (p->key != key) {    //만약 p->key가 입력받은 key랑 다르면
+				printf("There is no that key in list.\n");   //그런 키가 없다고 출력해줌
+				return 1;  //리턴
+			}
+
+			else {    //만약 p->key가 입력받은 key랑 같으면
+				h->llink = h;   //h->llink가 h를 가르킴
+				h->rlink = h;   //h->rlink가 h를 가르킴
+				free(p);            //p를 초기화시킴
+				return 1;     //리턴
+			}
+		}
+
+		else {   //만약 2개이상의 인덱스가 리스트에 남아있다면
+
+			while (p->rlink != h) { // 끝까지 반복한다(p->rlink가 h 나올떄까지)
+
+				trail = p;    //trail이 p를 가르키고
+				current = p->rlink;   //current는 p->rlink가 됨, 즉 한칸 이동
+
+				if (trail->key == key) {   //만약 trail의 key랑 key랑 같다면
+					trail->llink->rlink = trail->rlink;   //trail->llink->rlink가 trail->rlink를 가르킴
+					trail->rlink->llink = trail->llink;   //trail->rlink->llink가 trail->llink를 가르킴
+					free(trail);         //trail의 메모리를 해제해준다
+					return 0;         //종료시킨다
+				}
+
+				else if (current->key == key) {    //만약 current의 키가 키이면,즉 trail 다음 리스트의 키값이 키이면
+
+					if (current->rlink != h) {   //만약 current->rlink가 h가 아닌경우
+						trail->rlink = current->rlink;   //trail->rlink가 current->rlink를 가르킴
+						current->rlink->llink = trail;   //current의 rlink의 llink가 trail을 가르킴
+						return 0;  //종료
+					}
+
+					else {   //만약 current->rlink가 h인 경우
+						trail->rlink = h;   //trail->rlink가 h를 가르킴
+						h->llink = trail;  //h->llink가 trail을 가르킴
+						free(current);  //current 메모리 해제해준다
+						return 0;  //종료
+					}
+				}
+
+				else if ((trail->key != key) && (current->key != key)) {       //만약 trail key도 key가 아니고 current key도 key가 아니면
+					p = p->rlink;   //p를 한칸 이동한다
+				}
+			}
+			printf("There is no that key in list.\n");   //그런 키가 없다고 출력해줌
+			return 1;  //리턴
+		}
+
+	}
+
+	else {          //만약 p가 비어있다면
+		printf("There is no element in list, first please add any node.\n");   //지울게 없다고 출력해준다
+		return 1;  //리턴
+	}
 }
 
 
