@@ -41,7 +41,7 @@ int main()
 	int key;
 	listNode* headnode=NULL;
 
-    printf("[----- [Noh Min Sung] [Student ID] -----]\n");
+    printf("[----- [Noh Min Sung] [2018038076] -----]\n");
 
 	do{
 		printf("----------------------------------------------------------------\n");
@@ -284,28 +284,29 @@ int deleteFirst(listNode* h) {   //첫 노드를 삭제하는 함수
 /**
  * 리스트의 링크를 역순으로 재 배치
  */
-int invertList(listNode* h) {
+int invertList(listNode* h) {  // 리스트의 링크를 역순으로 배치
 
-	listNode* p = h->rlink;  
-	listNode* middle;    
-	listNode* trail;   
+	listNode* p = h;  //리스트노드 포인터 p는 h를 가르킴
+	listNode* middle;    //리스트노드 포인터 middle선언
+	listNode* trail;     //리스트노드 포인터 trail선언
 
-	middle = NULL;
-	while (p->rlink != h) {  
-		trail = middle;     
-		middle = p;         
-		p = p->rlink;     
-		middle->rlink = middle->llink;     
-		middle->llink = p;   
-		h->rlink = middle;
+	middle = NULL;  //middle을 NULL로 초기화
+
+	while (p->rlink != h) {  //p->rlink가 h가 아니면, 즉 다시처음이 나올때까지 반복
+		trail = middle; //trail이 middle을 가르킴
+		middle = p;   //middle이 p를 가르킴
+		p = p->rlink;   //p는 p->rlink로 이동
+		middle->rlink = middle->llink;  //middle->rlink가 middle의 llink를 가르킴
+		middle->llink = p;   //middle의 llink는 p를 가르킴
+		h->rlink = middle;   //h->rlink는 middle을 가르킴
 	}
-
-	trail = middle;    
-	middle = p;			 
-	p = p->rlink;
-	middle->rlink = middle->llink;    
-	middle->llink = p;      
-    h->rlink= middle;
+	//마지막의 경우 즉 마지막 rlink가 h일 경우 반복문 탈출후 마지막 진행
+	trail = middle; //trail이 middle을 가르킴
+	middle = p; //middle이 p를 가르킴
+	p = p->rlink; //p는 p->rlink로 이동
+	middle->rlink = middle->llink; //middle->rlink가 middle의 llink를 가르킴
+	middle->llink = p;  //middle의 llink는 p를 가르킴
+	h->rlink = middle; //h->rlink는 middle을 가르킴
 	
 	return 0;
 }
