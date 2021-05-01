@@ -129,7 +129,7 @@ void inorderTraversal(Node* ptr)
 {
 	if (ptr) {
 		inorderTraversal(ptr->left);
-		printf("%d", ptr->key);
+		printf("[%d]   ", ptr->key);
 		inorderTraversal(ptr->right);
 	}
 }
@@ -137,7 +137,7 @@ void inorderTraversal(Node* ptr)
 void preorderTraversal(Node* ptr)
 {
 	if (ptr) {
-		printf("%d", ptr->key);
+		printf("[%d]   ", ptr->key);
 		preorderTraversal(ptr->left);
 		preorderTraversal(ptr->right);
 	}
@@ -148,7 +148,7 @@ void postorderTraversal(Node* ptr)
 	if (ptr) {
 		postorderTraversal(ptr->left);
 		postorderTraversal(ptr->right);
-		printf("%d", ptr->key);
+		printf("[%d]   ", ptr->key);
 	}
 }
 
@@ -160,26 +160,68 @@ int insert(Node* head, int key)
 	newnode->left = NULL;
 	newnode->right = NULL;
 
+	Node* temp = head->left;
+	Node* temp2 = temp;
+
 	if (head->left== NULL) {
 		head->left = newnode;
 		return 1;
 	}
 
+	while (temp!=NULL){
+		temp2 = temp;
+
+		if (temp->key > key) {
+			temp = temp->left;
+		}
+
+		else if (temp->key < key) {
+			temp = temp->right;
+		}
+	}
+	
+	if (temp2->key > key) {
+		temp2->left = newnode;
+		return 1;
+	}
+	else if (temp2->key < key) {
+		temp2->right = newnode;
+		return 1;
+	}
 }
+
 
 int deleteLeafNode(Node* head, int key)
 {
 
 }
 
+
 Node* searchRecursive(Node* ptr, int key)
 {
+	Node* search = ptr;  //Node 포인터 search는 ptr을 가르킴 (ptr은 head->left)
 
+	if (!search)  //만약 search가 없다면, 즉 그런 노드가 없으면 NULL반환
+		return NULL;
+	else if (key == search->key)  //만약 찾는 key랑 search->key랑 같으면
+		return search;				//search의 주소 리턴
+	else if (key < search->key)   //만약 찾는 key < search->key면
+		return searchRecursive(search->left, key);   //search->left와 key로 다시 searchRecursive 호출
+	else if (key > search->key)   //만약 key > search->key면
+		return searchRecursive(search->right, key);   //search->right와 key로 다시 searchRecursive 호출
 }
 
 Node* searchIterative(Node* head, int key)
 {
+	Node* search = head->left;
 
+	while (search->key!=key) {
+		if (key < search->key)
+			search = search->left;
+		else
+			search = search->right;
+	}
+	return search;
 }
 
 
