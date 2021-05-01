@@ -125,68 +125,70 @@ int initializeBST(Node** h) {
 
 
 
-void inorderTraversal(Node* ptr)
+void inorderTraversal(Node* ptr)  //중위 순회 함수
 {
-	if (ptr) {
-		inorderTraversal(ptr->left);
-		printf("[%d]   ", ptr->key);
-		inorderTraversal(ptr->right);
+	if (ptr) {     //만약 Node* ptr이 존재한다면 if문 실행, 처음엔 root
+		inorderTraversal(ptr->left);  //ptr->left로 inorderTraversal 호출, 만약 없으면 넘어감
+		printf("[%d]   ", ptr->key);  //ptr의 키 출력 (위의 호출을 넘어간 케이스임)
+		inorderTraversal(ptr->right);  //ptr->right로 inorderTraversal 호출, 만약 없으면 넘어감
 	}
 }
 
-void preorderTraversal(Node* ptr)
+void preorderTraversal(Node* ptr)  //전위 순회 함수
 {
-	if (ptr) {
-		printf("[%d]   ", ptr->key);
-		preorderTraversal(ptr->left);
-		preorderTraversal(ptr->right);
+	if (ptr) {      //만약 Node* ptr이 존재한다면 if문 실행, 처음엔 root
+		printf("[%d]   ", ptr->key);    //ptr->key 출력
+		preorderTraversal(ptr->left);   //ptr->left로 preorderTraversal 호출, 만약 없으면 넘어감
+		preorderTraversal(ptr->right);  //ptr->right로 preorderTraversal 호출, 만약 없으면 넘어감
 	}
 }
 
-void postorderTraversal(Node* ptr)
+void postorderTraversal(Node* ptr)   //후위 순회 함수
 {
-	if (ptr) {
-		postorderTraversal(ptr->left);
-		postorderTraversal(ptr->right);
-		printf("[%d]   ", ptr->key);
+	if (ptr) {     //만약 Node* ptr이 존재한다면 if문 실행, 처음엔 root
+		postorderTraversal(ptr->left);  //prt->left로 postorderTraversal 호출, 만약 없으면 넘어감
+		postorderTraversal(ptr->right);  //prt->right로 postorderTraversal 호출, 만약 없으면 넘어감
+		printf("[%d]   ", ptr->key);   //ptr->key 출력
 	}
 }
 
 
-int insert(Node* head, int key)
+int insert(Node* head, int key)   //노드를 추가하는 함수
 {
-	Node* newnode = (Node*)malloc(sizeof(Node));
-	newnode->key = key;
-	newnode->left = NULL;
-	newnode->right = NULL;
+	Node* newnode = (Node*)malloc(sizeof(Node));   //삽입할 newnode 동적 할당
+	newnode->key = key;      //newnode의 key에 입력받은 키 넣어줌
+	newnode->left = NULL;   //newnode->left NULL로 초기화
+	newnode->right = NULL;  //newnode->right NULL로 초기화
 
-	Node* temp = head->left;
-	Node* temp2 = temp;
+	Node* temp = head->left;  //temp 선언하고 head->left 즉 root를 가르키게함
+	Node* temp2 = temp;    //temp2선언하고 temp를 가르키게함 처음엔 root
 
-	if (head->left== NULL) {
-		head->left = newnode;
-		return 1;
+	if (head->left== NULL) {  //만약 head->left가 NULL인 경우, 즉 tree에 아무 것도 없는 경우는
+		head->left = newnode;   //newnode가 root node가 되도록, head->left를 newnode로 해준다.
+		return 1;  //종료
 	}
 
-	while (temp!=NULL){
-		temp2 = temp;
+	while (temp!=NULL){  //만약 temp!=NULL, 즉 노드가 있는 경우
+		temp2 = temp;   //temp2가 temp를 가르키게하고 
 
-		if (temp->key > key) {
-			temp = temp->left;
+		if (temp->key > key) {  //만약 temp->key가 key보다 크면
+			temp = temp->left;  //temp는 temp->left가 된다. 
 		}
 
-		else if (temp->key < key) {
-			temp = temp->right;
+		else if (temp->key < key) {  //만약 temp->key가 key보다 작으면
+			temp = temp->right;  //temp는 temp->right가 된다. 
 		}
 	}
 	
-	if (temp2->key > key) {
-		temp2->left = newnode;
-		return 1;
+      //while문을 빠져 나온 상태, 즉 temp가 NULL인경우
+      //위에서 while문 시작시 temp2는 temp를 하기 때문에 while문 탈출 시 temp2는 temp의 부모 위치에 있음
+	if (temp2->key > key) {    //만약 temp2->key가 key보다 크면
+		temp2->left = newnode;  //temp2->left 가 newnode를 가르키게 함
+		return 1;  //종료
 	}
-	else if (temp2->key < key) {
-		temp2->right = newnode;
-		return 1;
+	else if (temp2->key < key) {   //temp2->key가 key보다 작으면
+		temp2->right = newnode;    //temp2->right가 newnode를 가르키게 함
+		return 1;   //종료
 	}
 }
 
@@ -197,7 +199,7 @@ int deleteLeafNode(Node* head, int key)
 }
 
 
-Node* searchRecursive(Node* ptr, int key)
+Node* searchRecursive(Node* ptr, int key)  // recursive방식으로 노드를 찾는 함수
 {
 	Node* search = ptr;  //Node 포인터 search는 ptr을 가르킴 (ptr은 head->left)
 
@@ -211,17 +213,17 @@ Node* searchRecursive(Node* ptr, int key)
 		return searchRecursive(search->right, key);   //search->right와 key로 다시 searchRecursive 호출
 }
 
-Node* searchIterative(Node* head, int key)
+Node* searchIterative(Node* head, int key)  // iterative 방식으로 노드를 찾는 함수
 {
-	Node* search = head->left;
+	Node* search = head->left;  //Node 포인터 search 는 head->left를 가르 킴(root)
 
-	while (search->key!=key) {
-		if (key < search->key)
-			search = search->left;
-		else
-			search = search->right;
+	while (search->key!=key) {   //search->key!=key 이면 반복문 진행 즉 search->key==key 이면 탈출
+		if (key < search->key)    //만약 key < search->key이면
+			search = search->left;  //search는 search->left가 됨
+		else            //만약 key > search->key이면
+			search = search->right;  //search는 search->right가 됨
 	}
-	return search;
+	return search;   //while문 탈출시 search를 return 
 }
 
 
