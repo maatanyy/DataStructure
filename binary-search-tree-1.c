@@ -38,7 +38,7 @@ int main()
 	int key;
 	Node* head = NULL;
 	Node* ptr = NULL;	/* temp */
-
+        printf("[----- [Noh Min Sung] [2018038076] -----]\n");
 	do{
 		printf("\n\n");
 		printf("----------------------------------------------------------------\n");
@@ -195,9 +195,60 @@ int insert(Node* head, int key)   //노드를 추가하는 함수
 
 int deleteLeafNode(Node* head, int key)
 {
+	Node* temp = NULL;  
+
+	Node* search = head->left;  //Node 포인터 search 는 head->left를 가르 킴(root)
+
+	if (search != NULL) {
+
+		if (search->key == key) {
+			if ((search->left == NULL) && (search->right == NULL)) {
+				free(search);
+				return 1;
+			}
+			else {
+				printf("Node with that key is not LeafNode\n");
+				return 1;
+			}
+		}
+
+		else {
+
+			while ((search->key != key)&&(search != NULL)) {   //search->key!=key 이면 반복문 진행 즉 search->key==key 이면 탈출
+				temp = search;
+				if (key < search->key)    //만약 key < search->key이면
+					search = search->left;  //search는 search->left가 됨
+				else if(key > search->key)        //만약 key > search->key이면
+					search = search->right;  //search는 search->right가 됨
+			}
+
+			if (search == NULL) {
+				printf("Node with that key is not LeafNode\n");
+				return 1;
+				}
+
+			else if ((search->left == NULL) && (search->right == NULL)) {
+				if (temp->right == search) {
+					free(search);
+					temp->right = NULL;
+					return 1;
+				}
+				else if (temp->left == search) {
+					free(search);
+					temp->left = NULL;
+					return 1;
+				}
+			}
+
+		}
+	}
+
+	else {
+		printf("Tree is empty.\n");
+		return 1;
+	}
 
 }
-
 
 Node* searchRecursive(Node* ptr, int key)  // recursive방식으로 노드를 찾는 함수
 {
