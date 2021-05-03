@@ -294,12 +294,14 @@ int freeBST(Node* head) //tree의 메모리를 해제 해주는 함수
 		freeBST(head->left);  //freeBST를 head->left를 이용해 다시 호출
 		if (head->right == head) {  //head의 오른쪽이 head인 경우는 처음 노드에서 무한히 반복되므로 예외처리를 해줘야 한다
 			free(head);   //이 경우에는 head를 free해준다
+			return 1;  //리턴
 		}
 		freeBST(head->right);  //head->right가 head가 아닌 경우에는 freeBST를 head->right로 호출해준다
 		free(head);  //head를 해제해준다.
+		return 1;  //리턴
 	}
 	
-	return 0;  //리턴
+	return 1;  //리턴
 }
 
 
