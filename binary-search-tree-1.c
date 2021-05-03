@@ -13,8 +13,8 @@
 
 typedef struct node {
 	int key;
-	struct node *left;
-	struct node *right;
+	struct node* left;
+	struct node* right;
 } Node;
 
 int initializeBST(Node** h);
@@ -38,8 +38,8 @@ int main()
 	int key;
 	Node* head = NULL;
 	Node* ptr = NULL;	/* temp */
-        printf("[----- [Noh Min Sung] [2018038076] -----]\n");
-	do{
+	    printf("[----- [Noh Min Sung] [2018038076] -----]\n");
+	do {
 		printf("\n\n");
 		printf("----------------------------------------------------------------\n");
 		printf("                   Binary Search Tree #1                        \n");
@@ -54,7 +54,7 @@ int main()
 		printf("Command = ");
 		scanf(" %c", &command);
 
-		switch(command) {
+		switch (command) {
 		case 'z': case 'Z':
 			initializeBST(&head);
 			break;
@@ -75,7 +75,7 @@ int main()
 			printf("Your Key = ");
 			scanf("%d", &key);
 			ptr = searchIterative(head, key);
-			if(ptr != NULL)
+			if (ptr != NULL)
 				printf("\n node [%d] found at %p\n", ptr->key, ptr);
 			else
 				printf("\n Cannot find the node [%d]\n", key);
@@ -84,7 +84,7 @@ int main()
 			printf("Your Key = ");
 			scanf("%d", &key);
 			ptr = searchRecursive(head->left, key);
-			if(ptr != NULL)
+			if (ptr != NULL)
 				printf("\n node [%d] found at %p\n", ptr->key, ptr);
 			else
 				printf("\n Cannot find the node [%d]\n", key);
@@ -104,7 +104,7 @@ int main()
 			break;
 		}
 
-	}while(command != 'q' && command != 'Q');
+	} while (command != 'q' && command != 'Q');
 
 	return 1;
 }
@@ -112,7 +112,7 @@ int main()
 int initializeBST(Node** h) {
 
 	/* if the tree is not empty, then remove all allocated nodes from the tree*/
-	if(*h != NULL)
+	if (*h != NULL)
 		freeBST(*h);
 
 	/* create a head node */
@@ -163,12 +163,12 @@ int insert(Node* head, int key)   //노드를 추가하는 함수
 	Node* temp = head->left;  //temp 선언하고 head->left 즉 root를 가르키게함
 	Node* temp2 = temp;    //temp2선언하고 temp를 가르키게함 처음엔 root
 
-	if (head->left== NULL) {  //만약 head->left가 NULL인 경우, 즉 tree에 아무 것도 없는 경우는
+	if (head->left == NULL) {  //만약 head->left가 NULL인 경우, 즉 tree에 아무 것도 없는 경우는
 		head->left = newnode;   //newnode가 root node가 되도록, head->left를 newnode로 해준다.
 		return 1;  //종료
 	}
 
-	while (temp!=NULL){  //만약 temp!=NULL, 즉 노드가 있는 경우
+	while (temp != NULL) {  //만약 temp!=NULL, 즉 노드가 있는 경우
 		temp2 = temp;   //temp2가 temp를 가르키게하고 
 
 		if (temp->key > key) {  //만약 temp->key가 key보다 크면
@@ -179,9 +179,9 @@ int insert(Node* head, int key)   //노드를 추가하는 함수
 			temp = temp->right;  //temp는 temp->right가 된다. 
 		}
 	}
-	
-      //while문을 빠져 나온 상태, 즉 temp가 NULL인경우
-      //위에서 while문 시작시 temp2는 temp를 하기 때문에 while문 탈출 시 temp2는 temp의 부모 위치에 있음
+
+	//while문을 빠져 나온 상태, 즉 temp가 NULL인경우
+	//위에서 while문 시작시 temp2는 temp를 하기 때문에 while문 탈출 시 temp2는 temp의 부모 위치에 있음
 	if (temp2->key > key) {    //만약 temp2->key가 key보다 크면
 		temp2->left = newnode;  //temp2->left 가 newnode를 가르키게 함
 		return 1;  //종료
@@ -193,62 +193,69 @@ int insert(Node* head, int key)   //노드를 추가하는 함수
 }
 
 
-int deleteLeafNode(Node* head, int key)
+int deleteLeafNode(Node* head, int key)  //leafnode 삭제하는 함수
 {
-	Node* temp = NULL;  
+	Node* temp = searchIterative(head, key);  //temp에 searchIterative 함수 결과 저장
 
 	Node* search = head->left;  //Node 포인터 search 는 head->left를 가르 킴(root)
 
-	if (search != NULL) {
+	if (temp == NULL) {  //temp가 비어있으면 즉, 그 노드에 대한 주소가 null인 경우 즉 트리에 찾는 노드가 없을 경우
+		printf("that node is not in tree.\n");   //tree에 노드가 없다고 출력
+	}
 
-		if (search->key == key) {
-			if ((search->left == NULL) && (search->right == NULL)) {
-				free(search);
-				return 1;
+	else {   //그 외에 트리에 찾는 노드가 있는 경우 
+		if (search != NULL) {  //root노드가 널이 아니면
+
+			if (search->key == key) {  //만약 루트노드의 키랑 찾는 키랑 같으면
+				if ((search->left == NULL) && (search->right == NULL)) {  //루트노드가 리프노드이면
+					head->left = NULL;     //head->left를 NULL로 바꿔준다
+					free(search);   //search(root)를 free해준다
+					return 1;   //종료
+				}
+				else {   //루트노드가 리프 노드가 아니면
+					printf("Node with that key is not LeafNode\n");   //노드가 리프 노드가 아니라고 출력해준다
+					return 1;  //종료
+				}
 			}
-			else {
-				printf("Node with that key is not LeafNode\n");
-				return 1;
+
+			else {  //루트노드가 아닌 다른 노드의 경우 
+
+				while (search->key != key) {   //search->key==key이면 반복문 탈출
+					temp = search;      //temp는 search를 가르킨다
+					if (key < search->key)    //만약 key < search->key이면
+						search = search->left;  //search는 search->left가 됨
+					else if (key > search->key)        //만약 key > search->key이면
+						search = search->right;  //search는 search->right가 됨
+				}
+				//반복문 탈출 후(
+				if ((search->left == NULL) && (search->right == NULL)) {   //search 노드의 리프노드의 left가 null이고 right가 null인 경우
+					if (temp->right == search) { //만약 temp->right가 search이면
+						free(search);    //search를 free하고
+						temp->right = NULL;   //temp->right를 null로 한다
+						return 1;  //종료
+					}
+					else if (temp->left == search) {  //만약 temp->left가 search이면
+						free(search);  //search를 free하고
+						temp->left = NULL;  //temp->left를 null로 한다
+						return 1;  //종료
+					}
+				}
+				else {  //그 외의 경우 즉 searchnode가 leafNode가 아닌 경우
+					printf("Node with that key is not LeafNode\n");  //leafnode가 아니라고 출력해준다
+					return 1;  //종료
+				}
+
 			}
 		}
 
-		else {
 
-			while ((search->key != key)&&(search != NULL)) {   //search->key!=key 이면 반복문 진행 즉 search->key==key 이면 탈출
-				temp = search;
-				if (key < search->key)    //만약 key < search->key이면
-					search = search->left;  //search는 search->left가 됨
-				else if(key > search->key)        //만약 key > search->key이면
-					search = search->right;  //search는 search->right가 됨
-			}
-
-			if (search == NULL) {
-				printf("Node with that key is not LeafNode\n");
-				return 1;
-				}
-
-			else if ((search->left == NULL) && (search->right == NULL)) {
-				if (temp->right == search) {
-					free(search);
-					temp->right = NULL;
-					return 1;
-				}
-				else if (temp->left == search) {
-					free(search);
-					temp->left = NULL;
-					return 1;
-				}
-			}
-
+		else {  //트리에 노드가 없는 경우
+			printf("Tree is empty.\n");   //트리가 비어있다고 출력해준다
+			return 1;  //종료
 		}
 	}
-
-	else {
-		printf("Tree is empty.\n");
-		return 1;
-	}
-
 }
+
 
 Node* searchRecursive(Node* ptr, int key)  // recursive방식으로 노드를 찾는 함수
 {
@@ -268,13 +275,15 @@ Node* searchIterative(Node* head, int key)  // iterative 방식으로 노드를 
 {
 	Node* search = head->left;  //Node 포인터 search 는 head->left를 가르 킴(root)
 
-	while (search->key!=key) {   //search->key!=key 이면 반복문 진행 즉 search->key==key 이면 탈출
+	while (search!=NULL) {   //search 가 NULL일떄까지 반복
 		if (key < search->key)    //만약 key < search->key이면
 			search = search->left;  //search는 search->left가 됨
-		else            //만약 key > search->key이면
+		else if (key > search->key)           //만약 key > search->key이면
 			search = search->right;  //search는 search->right가 됨
+		else if (key == search->key)  //key랑 search->key랑 같으면
+			return search;  //search를 리턴한다
 	}
-	return search;   //while문 탈출시 search를 return 
+	return NULL;   //while문 탈출시 NULL를 return 
 }
 
 
