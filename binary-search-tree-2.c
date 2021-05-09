@@ -151,19 +151,19 @@ void recursiveInorder(Node* ptr)
 /**
  * textbook: p 224s
  */
-void iterativeInorder(Node* node)
+void iterativeInorder(Node* node)  //iterative방식 Inorder 함수 
 {	
-	for (;;) {
-		for (; node; node = node->left)
-			push(node);
+	for (;;) {   //무한루프
+		for (; node; node = node->left)  //만약 node가 존재한다면 node->left하며 반복
+			push(node);  //node를 push한다
+        //위의 for문 탈출시 
+		node = pop();  //node를 pop한다
 
-		node = pop();
+		if (!node)  //만약 node가 없다면
+			break;  //반복문 탈출
 
-		if (!node)
-			break;
-
-		printf(" [%d] ", node->key);
-		node = node->right;
+		printf(" [%d] ", node->key);  //node->key값을 출력한다
+		node = node->right;  //node는 node->right가 된다
 	}
 }
 
