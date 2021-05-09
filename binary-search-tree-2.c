@@ -170,8 +170,29 @@ void iterativeInorder(Node* node)
 /**
  * textbook: p 225
  */
-void levelOrder(Node* ptr)
+void levelOrder(Node* ptr)  //레벨 순서 순회하는 함수
 {
+
+	if (!ptr)     //만약 ptr이 비었으면
+		return;      //종료
+	enQueue(ptr);   //비어있지 않으면 ptr을 euque해줌
+
+	for (; ; ) {   //무한 루프
+		ptr = deQueue();   //ptr은 deQueue한게 됨
+
+		if (ptr) {  //만약 ptr이 존재한다면, 즉 큐에서 뭐가 나왔다면
+			printf(" [%d] ", ptr->key);   //ptr의 key를 출력해준다
+
+			if (ptr->left)  //만약 ptr->left가 존재한다면
+				enQueue(ptr->left);   //ptr->left 를 enQueue해줌
+
+			if (ptr->right)   //만약 ptr->right가 존재한다면
+				enQueue(ptr->right);  //ptr->right를 enQueue해줌
+		}
+
+		else  //ptr이 존재하지 않는다면
+			break;  //반복문 탈출
+	}
 }
 
 
@@ -274,12 +295,29 @@ void push(Node* aNode)
 
 
 
-Node* deQueue()
+Node* deQueue()    //deQueue 함수 (queue에서 하나 빼는 함수)
 {
+	if (front == rear) {  //만약 front 랑 rear랑 같다면, 즉 초기조건이고 큐가 비어있는 상태
+		//printf("Queue is empty.\n");
+		return NULL;   //종료해줌, 
+	}
+
+	else { //front 랑 rear랑 다르면 즉 뺄게 있으면
+		front = (front + 1) % MAX_QUEUE_SIZE;  //front를 하나 증가시키고 
+			return queue[front];  //queue[front]를 리턴해줌
+	}
 }
 
-void enQueue(Node* aNode)
+void enQueue(Node* aNode)   //enQueue함수 (queue에 하나 넣는 함수)
 {
+	if ((front == (rear + 1) % MAX_QUEUE_SIZE)) {  //만약 front가 rear+1이랑 같다면 즉 큐가 가득찬 경우라면
+		printf("Queue is full.\n");  //큐가 가득 찼다고 출력해줌
+		return;  //종료
+	}
+	else {  //큐가 가득찬 경우가 아니라면
+		rear = (rear + 1) % MAX_QUEUE_SIZE;  //rear를 하나 증가시켜주고
+		queue[rear] = aNode;   //queue[rear]에 aNode를 넣어준다.
+	}
 }
 
 
