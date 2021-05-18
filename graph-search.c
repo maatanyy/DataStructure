@@ -77,13 +77,15 @@ int main()
 	return 1;
 }
 
-int initializeGraph(Node** h) {   //수정해야함
+int initializeGraph(Node* Nodelist) {   
 
 	for (int i = 0; i < MAX_VERTEX_SIZE; i++) {
-		if ((*h + i) != NULL)
-			*(h + i) = NULL;
+		if (Nodelist[i].key == i) {
+			Nodelist[i].key = 100;
+			free(Nodelist[i].link);
+			Nodelist[i].link = NULL;
+		}
 	}
-	return 1;
 }
 
 int insertVertex(Node* Nodelist, int key)   //Vertex 추가하는 함수
