@@ -1,7 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
+/*
+ * Graph-search.c
+ *
+ * Data Structures
+ *
+ * Department of Computer Science
+ * at Chungbuk National University
+ *
+ */
 
 //그래프의 정점에 대한 노드
 typedef struct Node {  //Node 구조체 정의
@@ -10,22 +18,42 @@ typedef struct Node {  //Node 구조체 정의
 } Node;
 
 #define MAX_VERTEX_SIZE 10  //Vertex는 최대 10개 (문제 조건)
+#define TRUE 30  //벌텍스 방문한 곳에 사용
+#define FALSE 50   //방문안한 벌텍스에 사용
 
-int initializeGraph(Node** h);  //그래프 초기화하는 함수
+/* for queue */
+#define MAX_QUEUE_SIZE		20
+Node* queue[MAX_QUEUE_SIZE];
+int front = -1;
+int rear = -1;
+
+Node* deQueue();
+void enQueue(Node* aNode);
+
+short int visited[MAX_VERTEX_SIZE];  //방문한 벌텍스 표시하는데 사용
+
+int initializeGraph(Node* Nodelist);  //그래프 초기화하는 함수
 int insertVertex(Node* Nodelist, int key);  //Vertex 추가하는 함수
 int insertEdge(Node* Nodelist, int edge1, int edge2);  //Edge 추가하는 함수
 void printGraph(Node* Nodelist);  //Graph 출력하는 함수
 void freeGraph(Node* Nodelist);  //종료시 Graphfree하는데 쓰는 함수
-void freeGraph2(Node* Nodelist);  //종료시 Graphfree하는데 쓰는 함수v
+void freeGraph2(Node* Nodelist);  //종료시 Graphfree하는데 쓰는 함수
+void depthFirstSearch(Node* Nodelist, int v);   //깊이 우선 탐색 함수
+void breathFirstSearch(Node* Nodelist, int v);   //너비 우선 탐색 함수
 
 
 int main()
 {
 	char command;  //명령어 받을 변수
-	int key;
-	int edge1, edge2;
+	int key;  //키
+	int edge1, edge2;  //edge1, edge2 선언
+	int front = rear = -1;
+	
+	Node Nodelist[10] = { {100, NULL} };   //벌텍스를 둘 Nodelist 선언
 
-	Node Nodelist[10] = { {100, NULL} };  
+	for (int i = 0; i < MAX_VERTEX_SIZE; i++) {  //벌텍스의 수만큼 돌며 방문 FALSE로 초기화
+		visited[i] = FALSE;
+	}
 
 	printf("[----- [Noh Min Sung] [2018038076] -----]\n");
 
@@ -45,49 +73,76 @@ int main()
 
 		switch (command) {
 
-		case 'z': case 'Z':
-			initializeGraph(&Nodelist);
+		case 'z': case 'Z':       //z 입력시
+			initializeGraph(&Nodelist);      //그래프초기화함수 실행
 			break;
 
-		case 'q': case 'Q':
-		//	freeGraph(head);
+		case 'q': case 'Q':       //q 입력시
+			freeGraph(&Nodelist);   //그래프프리함수실행
 			break;
 
-		case 'v': case 'V':
-			printf("Write Your Vertex = ");
+		case 'v': case 'V':       //v 입력시 
+			printf("Write Your Vertex = ");    //벌텍스입력 받음
 			scanf("%d", &key);
-			insertVertex(&Nodelist, key);
+			insertVertex(&Nodelist, key);  //insertVertex함수 실행
 			break;
 
-		case 'e': case 'E':
-			printf("Write Your Edge (ex: 1 3)= ");
+		case 'd': case 'D':    //d 입력시
+			for (int i = 0; i < MAX_VERTEX_SIZE; i++) {   //visited[i]를 반복문 돌며 모두 방문안함으로 초기화하고
+				visited[i] = FALSE;
+			}
+			printf("Write Your Vertex to Depth First Search = ");   //DFS할 vertex입력 받고
+			scanf("%d", &key);
+			depthFirstSearch(&Nodelist,key);    //DFS함수실행
+
+			break;
+
+		case 'b': case 'B':    //b 입력시
+			for (int i = 0; i < MAX_VERTEX_SIZE; i++) {   //visited[i]를 반복문 돌며 모두 방문안함으로 초기화하고
+				visited[i] = FALSE;
+			}
+			printf("Write Your Vertex to Breath First Search = ");   //BFS할 vertex입력 받고
+			scanf("%d", &key);
+			breathFirstSearch(&Nodelist, key);    //BFS함수실행
+			break;
+
+
+		case 'e': case 'E':         //E 입력시 
+			printf("Write Your Edge (ex: 1 3)= ");        //엣지 입력받고
 			scanf("%d %d", &edge1,&edge2);
-			insertEdge(&Nodelist,edge1,edge2);
+			insertEdge(&Nodelist,edge1,edge2);   //insertEdge 함수 실행
 			break;
 
-		case 'p': case 'P':
-			printGraph(&Nodelist);
+		case 'p': case 'P':   //p입력시
+			printGraph(&Nodelist);  //printGraph 함수 실행
 			break;
 
-		default:
+		default:        //다른거 입력시 집중하라고 출력
 			printf("\n       >>>>>   Concentration!!   <<<<<     \n");
 			break;
 		}
 
-	} while (command != 'q' && command != 'Q');
+	} while (command != 'q' && command != 'Q');   //q 입력때 까지 반복
 
 	return 1;
 }
 
-int initializeGraph(Node* Nodelist) {   
+int initializeGraph(Node* Nodelist) {   //그래프 초기화하는 함수
 
-	for (int i = 0; i < MAX_VERTEX_SIZE; i++) {
-		if (Nodelist[i].key == i) {
-			Nodelist[i].key = 100;
-			free(Nodelist[i].link);
-			Nodelist[i].link = NULL;
+	for (int i = 0; i < MAX_VERTEX_SIZE; i++) {  //최대 벌텍스 크기만큼 반복하며
+		if (Nodelist[i].key == i) {   //노드리스트의 키가 i인 경우 즉 벌텍스가 존재하는 경우
+			Nodelist[i].key = 100;   //초기화 시켜주고
+			freeGraph2(Nodelist[i].link);  //링크도 초기화 시켜줌
+			Nodelist[i].link = NULL;  //모두 NULL로 함
 		}
 	}
+
+	front = rear = -1;
+
+	for (int i = 0; i < MAX_VERTEX_SIZE; i++) {  //최대 벌텍스 크기만큼 반복하며
+		visited[i] = FALSE;                    //노드 방문을 FALSE로 설정
+	} 
+
 }
 
 int insertVertex(Node* Nodelist, int key)   //Vertex 추가하는 함수
@@ -229,6 +284,7 @@ int insertEdge(Node* Nodelist, int edge1, int edge2)       //Edge 추가하는 �
           }	
 }
 
+
 void printGraph(Node* Nodelist) {  //그래프 정보 출력하는 함수
 	int count = 0;   //그래프가 비었나 확인하기 위해 사용
 
@@ -265,18 +321,87 @@ void printGraph(Node* Nodelist) {  //그래프 정보 출력하는 함수
 	}
 }
 
-void freeGraph(Node* Nodelist) {
-	for (int i = 0; i < MAX_VERTEX_SIZE; i++) {
-		freeGraph2(Nodelist[i].link);
+
+void depthFirstSearch(Node* Nodelist, int v) {  //깊이 우선 탐색 함수
+
+	if (Nodelist[v].key!=v) {     //만약에 vertex가 없는데 키를주고 탐색을 요구한 경우
+		printf("Check Please.\n");   //체크해달라고 요청
+		return 1;           //종료
+	}
+
+	Node* nodepointer;   //Node포인터 nodepointer 선언
+
+	visited[v] = TRUE;   //벌텍스를 방문으로 바꿈
+	printf(" %d ", v);   //v출력
+	for (nodepointer = &Nodelist[v]; nodepointer;nodepointer=nodepointer->link)  //지금노드리스트의 주소를 노드포인터가 가르키며 노드포인터가 존재하면(NULL)이 아니면 계속 링크 옮기며 반복문 실행
+		if (visited[nodepointer->key] == FALSE)   //만약 방문하지 않은곳이있다면
+			depthFirstSearch(Nodelist, nodepointer->key);   //방문하지 않은곳의 key로 다시 DFS함수 호출
+
+}
+
+void breathFirstSearch(Node* Nodelist, int v) {  //너비 우선 탐색 함수
+
+	front = rear = -1;  //front ,real는 -1로 초기화
+
+	if (Nodelist[v].key != v) {     //만약에 vertex가 없는데 키를주고 탐색을 요구한 경우
+		printf("Check Please.\n");   //체크해달라고 요청
+		return 1;           //종료
+	}
+
+	Node* nodepointer;   //Node포인터 nodepointer 선언
+	visited[v] = TRUE;   //벌텍스를 방문으로 바꿈
+	printf(" %d ", v);   //v출력
+	enQueue(&Nodelist[v]);  //입력받은 v에 해당하는 Nodelist주소를 큐에 넣어줌
+
+	while (front != rear) {  //front랑 rear랑 같을때 까지 즉 큐가 빌때까지
+		nodepointer = deQueue();   //nodepointer 는 deQueue 한것을가르킴
+		for (nodepointer; nodepointer; nodepointer = nodepointer->link) {  //nodepointer라 존재하면 NULL일떄까지 링크로 이동
+			if (visited[nodepointer->key] == FALSE) {   //만약 방문안한곳이면
+				printf(" %d ", nodepointer->key);   //key를 출력해줌
+				enQueue(&Nodelist[nodepointer->key]);  //방문한키의 Nodelist 주소를 enQueue해줌
+				visited[nodepointer->key] = TRUE;   //visited를 True로 바꿔줌
+			}
+		}
 	}
 }
 
-void freeGraph2(Node* Nodelist) {
-	if (Nodelist) {
-		freeGraph2(Nodelist->link);
-		free(Nodelist);
+void freeGraph(Node* Nodelist) {  //그래프 메모리해제하는 함수
+	for (int i = 0; i < MAX_VERTEX_SIZE; i++) {  //MAX_VERTEX_SIZE 만큼 돌며
+		freeGraph2(Nodelist[i].link);   //Nodelist[i].link로 freeGraph2함수 호출
+	}
+}
+
+void freeGraph2(Node* Nodelist) {  //그래프의 링크 하나씩 해제하는 함수
+	if (Nodelist) {    //Nodelist가 존재하면
+		freeGraph2(Nodelist->link);   //링크로 다시 freeGraph2 호출
+		free(Nodelist);   //메모리해제해줌
 	}
 }
 
 
+// Breath First Search에 이용!!!
 
+Node* deQueue()    //deQueue 함수 (queue에서 하나 빼는 함수)
+{
+	if (front == rear) {  //만약 front 랑 rear랑 같다면, 즉 초기조건이고 큐가 비어있는 상태
+		//printf("Queue is empty.\n");
+		return NULL;   //종료해줌, 
+	}
+
+	else { //front 랑 rear랑 다르면 즉 뺄게 있으면
+		front = (front + 1) % MAX_QUEUE_SIZE;  //front를 하나 증가시키고 
+		return queue[front];  //queue[front]를 리턴해줌
+	}
+}
+
+void enQueue(Node* aNode)   //enQueue함수 (queue에 하나 넣는 함수)
+{
+	if ((front == (rear + 1) % MAX_QUEUE_SIZE)) {  //만약 front가 rear+1이랑 같다면 즉 큐가 가득찬 경우라면
+		printf("Queue is full.\n");  //큐가 가득 찼다고 출력해줌
+		return;  //종료
+	}
+	else {  //큐가 가득찬 경우가 아니라면
+		rear = (rear + 1) % MAX_QUEUE_SIZE;  //rear를 하나 증가시켜주고
+		queue[rear] = aNode;   //queue[rear]에 aNode를 넣어준다.
+	}
+}
