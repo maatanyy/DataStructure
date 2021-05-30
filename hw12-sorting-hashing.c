@@ -317,13 +317,13 @@ int quickSort(int *a, int n)
 	return 0;
 }
 
-int hashCode(int key) {
+int hashCode(int key) {     //key를 입력 받아서 MAX_HASH_TABLE_SIZE로 나눈다
    return key % MAX_HASH_TABLE_SIZE;
 }
 
-int hashing(int *a, int **ht)
+int hashing(int *a, int **ht)  //해싱
 {
-	int *hashtable = NULL;
+	int *hashtable = NULL; 
 
 	/* hash table이 NULL인 경우 메모리 할당 */
 	if(*ht == NULL) {
@@ -333,7 +333,7 @@ int hashing(int *a, int **ht)
 		hashtable = *ht;	/* hash table이 NULL이 아닌경우, table 재활용, reset to -1 */
 	}
 
-	for(int i = 0; i < MAX_HASH_TABLE_SIZE; i++)
+	for(int i = 0; i < MAX_HASH_TABLE_SIZE; i++)  //반복문을 통해 hashtable[i]를 -1로 한다. 
 		hashtable[i] = -1;
 
 	/*
@@ -344,46 +344,47 @@ int hashing(int *a, int **ht)
 	int key = -1;
 	int hashcode = -1;
 	int index = -1;
-	for (int i = 0; i < MAX_ARRAY_SIZE; i++)
+	for (int i = 0; i < MAX_ARRAY_SIZE; i++)  //MAX_ARRAY_SIZE까지 반복한다
 	{
 		key = a[i];
-		hashcode = hashCode(key);
+		hashcode = hashCode(key); //hashcode 값을 바꿔줌
 		/*
 		printf("key = %d, hashcode = %d, hashtable[%d]=%d\n", key, hashcode, hashcode, hashtable[hashcode]);
 		*/
-		if (hashtable[hashcode] == -1)
+		if (hashtable[hashcode] == -1)  //만약 hashtable[hashcode]가 -1이면
 		{
-			hashtable[hashcode] = key;
-		} else 	{
+			hashtable[hashcode] = key;  //키를 넣어줌
+		} else 	{  //-1이 아닌 경우
 
-			index = hashcode;
+			index = hashcode;  //haschcode를 index에 넣어주고
 
-			while(hashtable[index] != -1)
+			while(hashtable[index] != -1)  //hashtable[index] != -1 이면
 			{
-				index = (++index) % MAX_HASH_TABLE_SIZE;
+				index = (++index) % MAX_HASH_TABLE_SIZE;  //인덱스는 하나 증가시키고 MAX_HASH_TABLE_SIZE로 나눈걸 대입
 				/*
 				printf("index = %d\n", index);
 				*/
 			}
-			hashtable[index] = key;
+			hashtable[index] = key;  //만약 hashtable[index]가 -1이면 키를 hashtable[index]에 넣어줌
 		}
 	}
 
 	return 0;
 }
 
+ //값 찾는 함수
 int search(int *ht, int key)
 {
-	int index = hashCode(key);
+	int index = hashCode(key);  //index는 hashCode(key)가 됨
 
-	if(ht[index] == key)
-		return index;
+	if(ht[index] == key)   //만약 ht[index] == key이면
+		return index;      //index 리턴
 
-	while(ht[++index] != key)
+	while(ht[++index] != key)  //만약 ht[++index]가 key가 아니면
 	{
-		index = index % MAX_HASH_TABLE_SIZE;
+		index = index % MAX_HASH_TABLE_SIZE;  //index는 index를 MAX_HASH_TABLE_SIZE 로 나눈 값이됨
 	}
-	return index;
+	return index;  //index 리턴
 }
 
 
